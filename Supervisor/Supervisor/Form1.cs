@@ -10,71 +10,106 @@ using System.Threading;
 
 namespace Supervisor
 {
-    public partial class Form1 : Form
+    public partial class Supervisor : Form
     {
-        private static System.Windows.Forms.Label label2;
-        TCPLineClient client = new TCPLineClient();
+        private HostsFile hostsFile = new HostsFile("hosts.ini");
+        private ProcessesFile processesFile = new ProcessesFile("processes.ini");
+        private System.Collections.Generic.Dictionary<int,Host> hosts = new System.Collections.Generic.Dictionary<int,Host>();
 
-        public Form1()
+        private class Host
+        {
+            public int id;
+            public string symbolicName;
+            public string hostName;
+            public TCPLineClient client;
+            public bool connected = false;
+            public System.Collections.Generic.Dictionary<int,ProcessControls> processControlsList = new System.Collections.Generic.Dictionary<int,ProcessControls>();
+        }
+
+        public Supervisor()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label2 = new System.Windows.Forms.Label();
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(0, 51);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(35, 13);
-            label2.TabIndex = 0;
-            label2.Text = "label2";
-            this.Controls.Add(label2);
+            System.Collections.Generic.List<HostsFile.Host> hostsFromFile = hostsFile.ReadHosts();
+            System.Collections.Generic.List<ProcessesFile.Process> processesFromFile = processesFile.ReadProcesses();
 
-            client.Init("localhost", 5666);
+            foreach (HostsFile.Host h in hostsFromFile)
+            {
+                Host host = new Host();
+                host.id = h.id;
+                host.symbolicName = h.symbolicName;
+                host.hostName = h.hostName;
+                host.client = new TCPLineClient();
+                host.client.Init(host.hostName, 5666);
+                this.hosts.Add(host.id, host);
+            }
+
+            int nextX = 5, nextY = 5;
+
+            foreach (ProcessesFile.Process p in processesFromFile)
+            {
+                if (hosts.ContainsKey(p.hostId) == true)
+                {
+                    ProcessControls processControls = new ProcessControls(hosts[p.hostId].client, p.symbolicName, p.processId, nextX, nextY);
+                    hosts[p.hostId].processControlsList.Add(p.processId, processControls);
+                    nextX += 205;
+
+                    this.Controls.Add(processControls.NameLabel);
+                    this.Controls.Add(processControls.StartButton);
+                    this.Controls.Add(processControls.StopButton);
+                }
+            }
+
             timer1.Start();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            client.AddToSendQueue("start;1;");
-        }
-
-        private void Stop_Click(object sender, EventArgs e)
-        {
-            client.AddToSendQueue("stop;1;");
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            client.Update();
-
-            if (client.HasData())
+            foreach (System.Collections.Generic.KeyValuePair<int,Host> pair in hosts)
             {
-                string[] tokens = client.Get().Split(';');
-                if (tokens[0] == "running")
+                Host host = pair.Value;
+                host.client.Update();
+                if (host.client.HasData())
                 {
-                    this.Notepad.BackColor = Color.Green;
+                    string[] tokens = host.client.Get().Split(';');
+                    if (tokens[0] == "running" && tokens.Length >= 2)
+                    {
+                        int procId = Convert.ToInt32(tokens[1]);
+                        host.processControlsList[procId].NameLabel.BackColor = Color.Green;
+                    }
+                    else if (tokens[0] == "stopped" && tokens.Length >= 2)
+                    {
+                        int procId = Convert.ToInt32(tokens[1]);
+                        host.processControlsList[procId].NameLabel.BackColor = Color.Red;
+                    }
                 }
-                else if (tokens[0] == "stopped")
+
+                if (host.connected == false && host.client.State() == TCPLineClient.StateType.CONNECTED)
                 {
-                    this.Notepad.BackColor = Color.Red;
+                    host.connected = true;
+                    foreach (System.Collections.Generic.KeyValuePair<int,ProcessControls> processControlsPair in host.processControlsList)
+                    {
+                        ProcessControls processControls = processControlsPair.Value;
+                        processControls.StartButton.Enabled = true;
+                        processControls.StopButton.Enabled = true;
+                        processControls.NameLabel.BackColor = Color.Red;
+                    }
                 }
-
+                else if (host.connected == true && host.client.State() != TCPLineClient.StateType.CONNECTED)
+                {
+                    host.connected = false;
+                    foreach (System.Collections.Generic.KeyValuePair<int, ProcessControls> processControlsPair in host.processControlsList)
+                    {
+                        ProcessControls processControls = processControlsPair.Value;
+                        processControls.StartButton.Enabled = false;
+                        processControls.StopButton.Enabled = false;
+                        processControls.NameLabel.BackColor = Color.Gray;
+                    }
+                }
             }
-
-            if (client.State() == TCPLineClient.StateType.CONNECTED)
-            {
-                this.Start.Enabled = true;
-                this.Stop.Enabled = true;
-            }
-            else
-            {
-                this.Start.Enabled = false;
-                this.Stop.Enabled = false;
-                this.Notepad.BackColor = Color.Gray;
-            }
-
         }
     }
 }
