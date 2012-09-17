@@ -60,6 +60,7 @@ namespace Supervisor
                     this.Controls.Add(processControls.NameLabel);
                     this.Controls.Add(processControls.StartButton);
                     this.Controls.Add(processControls.StopButton);
+                    this.Controls.Add(processControls.KillButton);
                 }
             }
 
@@ -95,6 +96,7 @@ namespace Supervisor
                         ProcessControls processControls = processControlsPair.Value;
                         processControls.StartButton.Enabled = true;
                         processControls.StopButton.Enabled = true;
+                        processControls.KillButton.Enabled = true;
                         processControls.NameLabel.BackColor = Color.Red;
                     }
                 }
@@ -106,6 +108,7 @@ namespace Supervisor
                         ProcessControls processControls = processControlsPair.Value;
                         processControls.StartButton.Enabled = false;
                         processControls.StopButton.Enabled = false;
+                        processControls.KillButton.Enabled = false;
                         processControls.NameLabel.BackColor = Color.Gray;
                     }
                 }

@@ -45,6 +45,14 @@ namespace Supervisor
             this.StopButton.Text = "Stop";
             this.StopButton.UseVisualStyleBackColor = true;
             this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
+
+            this.KillButton.Location = new System.Drawing.Point(xPos, yPos + 95);
+            this.KillButton.Name = "KillButton" + id;
+            this.KillButton.Size = new System.Drawing.Size(200, 25);
+            this.KillButton.TabIndex = 1;
+            this.KillButton.Text = "Kill";
+            this.KillButton.UseVisualStyleBackColor = true;
+            this.KillButton.Click += new System.EventHandler(this.KillButton_Click);
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -56,6 +64,12 @@ namespace Supervisor
         private void StopButton_Click(object sender, EventArgs e)
         {
             string str = "stop;" + id + ";";
+            client.AddToSendQueue(str);
+        }
+
+        private void KillButton_Click(object sender, EventArgs e)
+        {
+            string str = "kill;" + id + ";";
             client.AddToSendQueue(str);
         }
     }
