@@ -80,25 +80,23 @@ namespace Supervisor
                     {
                         int procId = Convert.ToInt32(tokens[1]);
                         host.processControlsList[procId].NameLabel.BackColor = Color.Green;
+                        host.processControlsList[procId].StartButton.Enabled = false;
+                        host.processControlsList[procId].StopButton.Enabled = true;
+                        host.processControlsList[procId].KillButton.Enabled = true;
                     }
                     else if (tokens[0] == "stopped" && tokens.Length >= 2)
                     {
                         int procId = Convert.ToInt32(tokens[1]);
                         host.processControlsList[procId].NameLabel.BackColor = Color.Red;
+                        host.processControlsList[procId].StartButton.Enabled = true;
+                        host.processControlsList[procId].StopButton.Enabled = false;
+                        host.processControlsList[procId].KillButton.Enabled = false;
                     }
                 }
 
                 if (host.connected == false && host.client.State() == TCPLineClient.StateType.CONNECTED)
                 {
                     host.connected = true;
-                    foreach (System.Collections.Generic.KeyValuePair<int,ProcessControls> processControlsPair in host.processControlsList)
-                    {
-                        ProcessControls processControls = processControlsPair.Value;
-                        processControls.StartButton.Enabled = true;
-                        processControls.StopButton.Enabled = true;
-                        processControls.KillButton.Enabled = true;
-                        processControls.NameLabel.BackColor = Color.Red;
-                    }
                 }
                 else if (host.connected == true && host.client.State() != TCPLineClient.StateType.CONNECTED)
                 {

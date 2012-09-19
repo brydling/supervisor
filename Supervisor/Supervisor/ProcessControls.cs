@@ -27,6 +27,7 @@ namespace Supervisor
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = true;
             this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
+            this.StartButton.Enabled = false;
 
             this.NameLabel.AutoSize = true;
             this.NameLabel.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -37,6 +38,7 @@ namespace Supervisor
             this.NameLabel.AutoSize = false;
             this.NameLabel.Font = new System.Drawing.Font("Arial", 16);
             this.NameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.NameLabel.BackColor = System.Drawing.Color.Gray;
 
             this.StopButton.Location = new System.Drawing.Point(xPos, yPos + 65);
             this.StopButton.Name = "StopButton"+id;
@@ -45,6 +47,7 @@ namespace Supervisor
             this.StopButton.Text = "Stop";
             this.StopButton.UseVisualStyleBackColor = true;
             this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
+            this.StopButton.Enabled = false;
 
             this.KillButton.Location = new System.Drawing.Point(xPos, yPos + 95);
             this.KillButton.Name = "KillButton" + id;
@@ -53,6 +56,7 @@ namespace Supervisor
             this.KillButton.Text = "Kill";
             this.KillButton.UseVisualStyleBackColor = true;
             this.KillButton.Click += new System.EventHandler(this.KillButton_Click);
+            this.KillButton.Enabled = false;
         }
 
         private void StartButton_Click(object sender, EventArgs e)
