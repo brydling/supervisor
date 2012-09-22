@@ -59,6 +59,7 @@ namespace Supervisor
 
                     this.Controls.Add(processControls.NameLabel);
                     this.Controls.Add(processControls.StartButton);
+                    this.Controls.Add(processControls.StartMinimizedCheckbox);
                     this.Controls.Add(processControls.StopButton);
                     this.Controls.Add(processControls.KillButton);
                 }
@@ -81,6 +82,7 @@ namespace Supervisor
                         int procId = Convert.ToInt32(tokens[1]);
                         host.processControlsList[procId].NameLabel.BackColor = Color.Green;
                         host.processControlsList[procId].StartButton.Enabled = false;
+                        host.processControlsList[procId].StartMinimizedCheckbox.Enabled = false;
                         host.processControlsList[procId].StopButton.Enabled = true;
                         host.processControlsList[procId].KillButton.Enabled = true;
                     }
@@ -89,6 +91,7 @@ namespace Supervisor
                         int procId = Convert.ToInt32(tokens[1]);
                         host.processControlsList[procId].NameLabel.BackColor = Color.Red;
                         host.processControlsList[procId].StartButton.Enabled = true;
+                        host.processControlsList[procId].StartMinimizedCheckbox.Enabled = true;
                         host.processControlsList[procId].StopButton.Enabled = false;
                         host.processControlsList[procId].KillButton.Enabled = false;
                     }
@@ -105,6 +108,7 @@ namespace Supervisor
                     {
                         ProcessControls processControls = processControlsPair.Value;
                         processControls.StartButton.Enabled = false;
+                        processControls.StartMinimizedCheckbox.Enabled = false;
                         processControls.StopButton.Enabled = false;
                         processControls.KillButton.Enabled = false;
                         processControls.NameLabel.BackColor = Color.Gray;
