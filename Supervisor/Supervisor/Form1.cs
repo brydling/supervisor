@@ -43,7 +43,7 @@ namespace Supervisor
                 host.symbolicName = h.symbolicName;
                 host.hostName = h.hostName;
                 host.client = new TCPLineClient();
-                host.client.Init(host.hostName, 5666);
+                host.client.Init(host.hostName, host.symbolicName, 5666);
                 this.hosts.Add(host.id, host);
             }
 
@@ -55,7 +55,16 @@ namespace Supervisor
                 {
                     ProcessControls processControls = new ProcessControls(hosts[p.hostId].client, p.symbolicName, p.processId, nextX, nextY);
                     hosts[p.hostId].processControlsList.Add(p.processId, processControls);
-                    nextX += 205;
+
+                    if (nextX > 880)
+                    {
+                        nextX = 5;
+                        nextY += 140;
+                    }
+                    else
+                    {
+                        nextX += 205;
+                    }
 
                     this.Controls.Add(processControls.NameLabel);
                     this.Controls.Add(processControls.StartButton);

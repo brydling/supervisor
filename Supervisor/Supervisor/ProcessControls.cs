@@ -42,7 +42,7 @@ namespace Supervisor
             this.NameLabel.Location = new System.Drawing.Point(xPos, yPos + 30);
             this.NameLabel.Size = new System.Drawing.Size(200, 60);
             this.NameLabel.TabIndex = 2;
-            this.NameLabel.Text = name+"\n@"+client.host;
+            this.NameLabel.Text = name+"\n@"+client.name;
             this.NameLabel.AutoSize = false;
             this.NameLabel.Font = new System.Drawing.Font("Arial", 16);
             this.NameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

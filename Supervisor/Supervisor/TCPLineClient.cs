@@ -16,6 +16,7 @@ namespace Supervisor
 
         public enum StateType { NOT_CONNECTED, CONNECTING, CONNECTED };
         public string host;
+        public string name;
 
         private Socket socket;
         private IPEndPoint remoteEP;
@@ -42,9 +43,10 @@ namespace Supervisor
         }
 
         // Returns true upon success (connect in progress) or false if the connection attempt cannot be initiated (invalid hostname?)
-        public bool Init(string host, int port)
+        public bool Init(string host, string name, int port)
         {
             this.host = host;
+            this.name = name;
             // Connect to a remote device.
             try
             {
