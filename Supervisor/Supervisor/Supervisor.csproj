@@ -70,6 +70,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="app.config" />
     <None Include="hosts.ini" />
     <None Include="processes.ini" />
     <None Include="Properties\Settings.settings">
