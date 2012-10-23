@@ -50,16 +50,16 @@ namespace Supervisor
 
             this.StopButton.Location = new System.Drawing.Point(xPos, yPos + 95);
             this.StopButton.Name = "StopButton"+id;
-            this.StopButton.Size = new System.Drawing.Size(98, 25);
+            this.StopButton.Size = new System.Drawing.Size(128, 25);
             this.StopButton.TabIndex = 1;
             this.StopButton.Text = "Stop";
             this.StopButton.UseVisualStyleBackColor = true;
             this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
             this.StopButton.Enabled = false;
 
-            this.KillButton.Location = new System.Drawing.Point(xPos + 102, yPos + 95);
+            this.KillButton.Location = new System.Drawing.Point(xPos + 132, yPos + 95);
             this.KillButton.Name = "KillButton" + id;
-            this.KillButton.Size = new System.Drawing.Size(98, 25);
+            this.KillButton.Size = new System.Drawing.Size(68, 25);
             this.KillButton.TabIndex = 1;
             this.KillButton.Text = "Kill";
             this.KillButton.UseVisualStyleBackColor = true;

@@ -27,6 +27,8 @@ namespace Supervisor
 
         private StateType state = StateType.NOT_CONNECTED;
 
+        private Mutex mutex = new Mutex();
+
         private byte[] recvBuffer = new byte[256];
         private StringBuilder inData = new StringBuilder();
         private System.Collections.Generic.Queue<String> recvQueue = new System.Collections.Generic.Queue<String>();
@@ -78,6 +80,7 @@ namespace Supervisor
 
         public void Update()
         {
+            mutex.WaitOne();
             if (state == StateType.NOT_CONNECTED)
             {
                 socketConnected = false;
@@ -127,6 +130,7 @@ namespace Supervisor
                     Send(socket, sendQueue.Dequeue());
                 }
             }
+            mutex.ReleaseMutex();
         }
 
         // 
@@ -144,22 +148,27 @@ namespace Supervisor
 
         public void AddToSendQueue(string message)
         {
+            mutex.WaitOne();
             if (message[message.Length - 1] != '\n')
             {
                 message = message + '\n';
             }
             sendQueue.Enqueue(message);
+            mutex.ReleaseMutex();
         }
 
         public string Get()
         {
+            mutex.WaitOne();
             if (recvQueue.Count > 0)
             {
                 string message = recvQueue.Dequeue();
+                mutex.ReleaseMutex();
                 return message;
             }
             else
             {
+                mutex.ReleaseMutex();
                 return null;
             }
         }

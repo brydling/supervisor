@@ -89,20 +89,26 @@ namespace Supervisor
                     if (tokens[0] == "running" && tokens.Length >= 2)
                     {
                         int procId = Convert.ToInt32(tokens[1]);
-                        host.processControlsList[procId].NameLabel.BackColor = Color.Green;
-                        host.processControlsList[procId].StartButton.Enabled = false;
-                        host.processControlsList[procId].StartMinimizedCheckbox.Enabled = false;
-                        host.processControlsList[procId].StopButton.Enabled = true;
-                        host.processControlsList[procId].KillButton.Enabled = true;
+                        if (host.processControlsList.ContainsKey(procId))
+                        {
+                            host.processControlsList[procId].NameLabel.BackColor = Color.Green;
+                            host.processControlsList[procId].StartButton.Enabled = false;
+                            host.processControlsList[procId].StartMinimizedCheckbox.Enabled = false;
+                            host.processControlsList[procId].StopButton.Enabled = true;
+                            host.processControlsList[procId].KillButton.Enabled = true;
+                        }
                     }
                     else if (tokens[0] == "stopped" && tokens.Length >= 2)
                     {
                         int procId = Convert.ToInt32(tokens[1]);
-                        host.processControlsList[procId].NameLabel.BackColor = Color.Red;
-                        host.processControlsList[procId].StartButton.Enabled = true;
-                        host.processControlsList[procId].StartMinimizedCheckbox.Enabled = true;
-                        host.processControlsList[procId].StopButton.Enabled = false;
-                        host.processControlsList[procId].KillButton.Enabled = false;
+                        if (host.processControlsList.ContainsKey(procId))
+                        {
+                            host.processControlsList[procId].NameLabel.BackColor = Color.Red;
+                            host.processControlsList[procId].StartButton.Enabled = true;
+                            host.processControlsList[procId].StartMinimizedCheckbox.Enabled = true;
+                            host.processControlsList[procId].StopButton.Enabled = false;
+                            host.processControlsList[procId].KillButton.Enabled = false;
+                        }
                     }
                 }
 
