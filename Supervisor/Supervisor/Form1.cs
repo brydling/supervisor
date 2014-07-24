@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace Supervisor
 {
@@ -31,6 +32,22 @@ namespace Supervisor
             InitializeComponent();
         }
 
+        private void LoadSettings()
+        {
+            RegistryKey reg = Registry.CurrentUser.CreateSubKey("SOFTWARE\\brydling\\Supervisor");
+
+            this.Top = (int)reg.GetValue("Top", 0);
+            this.Left = (int)reg.GetValue("Left", 0);
+        }
+
+        private void SaveSettings()
+        {
+            RegistryKey reg = Registry.CurrentUser.CreateSubKey("SOFTWARE\\brydling\\Supervisor");
+
+            reg.SetValue("Top", this.Top);
+            reg.SetValue("Left", this.Left);
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             System.Collections.Generic.List<HostsFile.Host> hostsFromFile = hostsFile.ReadHosts();
@@ -47,7 +64,7 @@ namespace Supervisor
                 this.hosts.Add(host.id, host);
             }
 
-            int nextX = 5, nextY = 5;
+            int nextX = 2, nextY = 2;
 
             foreach (ProcessesFile.Process p in processesFromFile)
             {
@@ -56,25 +73,25 @@ namespace Supervisor
                     ProcessControls processControls = new ProcessControls(hosts[p.hostId].client, p.symbolicName, p.processId, nextX, nextY);
                     hosts[p.hostId].processControlsList.Add(p.processId, processControls);
 
-                    if (nextX > 880)
+                    if (nextX > 1080)
                     {
-                        nextX = 5;
-                        nextY += 140;
+                        nextX = 2;
+                        nextY += 95;
                     }
                     else
                     {
-                        nextX += 205;
+                        nextX += 160;
                     }
 
                     this.Controls.Add(processControls.NameLabel);
-                    this.Controls.Add(processControls.StartButton);
                     this.Controls.Add(processControls.StartMinimizedCheckbox);
-                    this.Controls.Add(processControls.StopButton);
                     this.Controls.Add(processControls.KillButton);
                 }
             }
 
             timer1.Start();
+
+            LoadSettings();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -92,9 +109,7 @@ namespace Supervisor
                         if (host.processControlsList.ContainsKey(procId))
                         {
                             host.processControlsList[procId].NameLabel.BackColor = Color.Green;
-                            host.processControlsList[procId].StartButton.Enabled = false;
                             host.processControlsList[procId].StartMinimizedCheckbox.Enabled = false;
-                            host.processControlsList[procId].StopButton.Enabled = true;
                             host.processControlsList[procId].KillButton.Enabled = true;
                         }
                     }
@@ -104,9 +119,7 @@ namespace Supervisor
                         if (host.processControlsList.ContainsKey(procId))
                         {
                             host.processControlsList[procId].NameLabel.BackColor = Color.Red;
-                            host.processControlsList[procId].StartButton.Enabled = true;
                             host.processControlsList[procId].StartMinimizedCheckbox.Enabled = true;
-                            host.processControlsList[procId].StopButton.Enabled = false;
                             host.processControlsList[procId].KillButton.Enabled = false;
                         }
                     }
@@ -122,14 +135,17 @@ namespace Supervisor
                     foreach (System.Collections.Generic.KeyValuePair<int, ProcessControls> processControlsPair in host.processControlsList)
                     {
                         ProcessControls processControls = processControlsPair.Value;
-                        processControls.StartButton.Enabled = false;
                         processControls.StartMinimizedCheckbox.Enabled = false;
-                        processControls.StopButton.Enabled = false;
                         processControls.KillButton.Enabled = false;
                         processControls.NameLabel.BackColor = Color.Gray;
                     }
                 }
             }
+        }
+
+        private void Supervisor_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
         }
     }
 }
