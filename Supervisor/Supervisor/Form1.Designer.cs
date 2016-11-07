@@ -46,6 +46,7 @@
             this.Name = "Supervisor";
             this.Text = "Supervisor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Supervisor_FormClosing);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Supervisor_MouseDown);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
