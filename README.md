@@ -1,6 +1,8 @@
 # supervisor
 ## About
-This is a tool for starting and stopping processes on multiple computers from a single GUI. This repository is for the GUI application written in Visual C# and includes project files for Visual Studio Express. The server, running in one instance on every computer where processes shall be started and stopped, is in a different project called [local_supervisor](http://github.com/brydling/local_supervisor).
+This is a tool for starting and stopping processes on multiple computers from a single GUI. It was developed for a flight simulator consisting of several processes executing on several Windows computers.
+
+This repository is for the GUI application written in Visual C# and includes project files for Visual Studio Express. The server, running in one instance on every computer where processes shall be started and stopped, is in a different project called [local_supervisor](http://github.com/brydling/local_supervisor).
 ## Usage
 The example configuration files included (hosts.ini and processes.ini) shall be put in the same directory as the supervisor .exe-file and are configured to work with the example configuration file for local_supervisor. Start the two programs on the same computer and test. I think the configuration files are pretty self-explanatory.
 
